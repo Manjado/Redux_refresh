@@ -1,65 +1,16 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import { createStore, combineReducers, bindActionCreators } from 'redux';
+import { createStore } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
+import rootReducer from './reducers';
 
-const initialMovies = {
-  listName: 'Favourite',
-  list: ['Rambo', 'Matrix', 'Killer']
-};
+import { movieActions } from './app/movies/duck';
 
-const initialActors = {
-  listName: 'Best',
-  list: ['Tom Hanks', 'Julia Roberts', 'Angelina Jolie']
-};
-
-function movies(state = initialMovies, action) {
-  switch (action.type) {
-    case 'ADD_MOVIE':
-      return {
-        ...state,
-        list: [...state.list, action.item]
-      };
-    case 'RESET_MOVIES':
-      return { ...state, list: [] };
-    default:
-      return state;
-  }
-}
-
-function actors(state = initialActors, action) {
-  switch (action.type) {
-    case 'ADD_ACTOR':
-      return {
-        ...state,
-        list: [...state.list, action.item]
-      };
-    case 'RESET_ACTORS':
-      return { ...state, list: [] };
-    default:
-      return state;
-  }
-}
-
-const allReducers = combineReducers({ movies, actors });
-
-const store = createStore(allReducers, composeWithDevTools());
-
-const addActor = item => ({ type: 'ADD_ACTOR', item });
-const reset = () => ({ type: 'RESET_ACTORS' });
-
-store.dispatch(addActor('Brat Pit'));
-
-const actorsActions = bindActionCreators(
-  { add: addActor, reset },
-  store.dispatch
-);
-
-actorsActions.add('Leonardo DiCaprio');
-actorsActions.reset();
-
+const store = createStore(rootReducer, composeWithDevTools());
 window.store = store;
+
+store.dispatch(movieActions.add('Rambo V'));
 
 function App() {
   return (
