@@ -1,7 +1,7 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import { createStore, combineReducers } from 'redux';
+import { createStore, combineReducers, bindActionCreators } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 
 const initialMovies = {
@@ -45,6 +45,20 @@ function actors(state = initialActors, action) {
 const allReducers = combineReducers({ movies, actors });
 
 const store = createStore(allReducers, composeWithDevTools());
+
+const addActor = item => ({ type: 'ADD_ACTOR', item });
+const reset = () => ({ type: 'RESET_ACTORS' });
+
+store.dispatch(addActor('Brat Pit'));
+
+const actorsActions = bindActionCreators(
+  { add: addActor, reset },
+  store.dispatch
+);
+
+actorsActions.add('Leonardo DiCaprio');
+actorsActions.reset();
+
 window.store = store;
 
 function App() {
